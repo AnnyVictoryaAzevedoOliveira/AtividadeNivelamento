@@ -1,70 +1,40 @@
-import java.text.NumberFormat;
+public abstract class Produto {
 
-public class Produto {
-	
 	private static final double MARGEM_PADRAO = 0.2;
+
 	private String descricao;
-	private double precoCusto;
-	private double margemLucro;
-	
-	/**
-     * Inicializador privado. Os valores default, em caso de erro, são:
-     * "Produto sem descrição", R$ 0.00, 0.0  
-     * @param desc Descrição do produto (mínimo de 3 caracteres)
-     * @param precoCusto Preço do produto (mínimo 0.01)
-     * @param margemLucro Margem de lucro (mínimo 0.01)
-     */
+	protected double precoCusto;
+	protected double margemLucro;
+
 	private void init(String desc, double precoCusto, double margemLucro) {
-		
-		if ((desc.length() >= 3) && (precoCusto > 0.0) && (margemLucro > 0.0)) {
-			this.descricao = desc;
-			this.precoCusto = precoCusto;
-			this.margemLucro = margemLucro;
-		} else {
-			throw new IllegalArgumentException("Valores inválidos para os dados do produto.");
-		}
+		this.descricao = desc;
+		this.precoCusto = precoCusto;
+		this.margemLucro = margemLucro;
 	}
-	
-	/**
-     * Construtor completo. Os valores default, em caso de erro, são:
-     * "Produto sem descrição", R$ 0.00, 0.0  
-     * @param desc Descrição do produto (mínimo de 3 caracteres)
-     * @param precoCusto Preço do produto (mínimo 0.01)
-     * @param margemLucro Margem de lucro (mínimo 0.01)
-     */
-	public Produto(String desc, double precoCusto, double margemLucro) {
+
+	protected Produto(String desc, double precoCusto, double margemLucro) {
 		init(desc, precoCusto, margemLucro);
 	}
-	
-	/**
-     * Construtor sem margem de lucro - fica considerado o valor padrão de margem de lucro.
-     * Os valores default, em caso de erro, são:
-     * "Produto sem descrição", R$ 0.00 
-     * @param desc Descrição do produto (mínimo de 3 caracteres)
-     * @param precoCusto Preço do produto (mínimo 0.01)
-     */
-	public Produto(String desc, double precoCusto) {
+
+	protected Produto(String desc, double precoCusto) {
 		init(desc, precoCusto, MARGEM_PADRAO);
 	}
-	
-	 /**
-     * Retorna o valor de venda do produto, considerando seu preço de custo e margem de lucro.
-     * @return Valor de venda do produto (double, positivo)
-     */
-	public double valorDeVenda() {
-		return (precoCusto * (1.0 + margemLucro));
+
+	public abstract double valorVenda();
+
+	public String getDescricao() {
+		return descricao;
 	}
-	
-	/**
-     * Descrição, em string, do produto, contendo sua descrição e o valor de venda.
-     *  @return String com o formato:
-     * [NOME]: R$ [VALOR DE VENDA]
-     */
-    @Override
+
+	public double getPrecoCusto() {
+		return precoCusto;
+	}
+
+	public double getMargemLucro() {
+		return margemLucro;
+	}
+
 	public String toString() {
-    	
-    	NumberFormat moeda = NumberFormat.getCurrencyInstance();
-    	
-		return String.format("NOME: " + descricao + ": " + moeda.format(valorDeVenda()));
+		return "Produto: " + descricao + " - Custo: R$ " + precoCusto + " - Margem: " + (margemLucro * 100) + "%" +" - Venda: R$ " + valorVenda();
 	}
 }
